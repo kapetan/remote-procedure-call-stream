@@ -1,6 +1,6 @@
 {
   "name": "remote-procedure-call-stream",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Binary RPC protocol stream",
   "main": "index.js",
   "scripts": {
