@@ -1,0 +1,26 @@
+{
+  "name": "remote-procedure-call-stream",
+  "version": "0.0.0",
+  "description": "Binary RPC protocol stream",
+  "main": "index.js",
+  "scripts": {
+    "test": "standard --verbose && tape test/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kapetan/remote-procedure-call-stream.git"
+  },
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kapetan/remote-procedure-call-stream/issues"
+  },
+  "homepage": "https://github.com/kapetan/remote-procedure-call-stream#readme",
+  "dependencies": {
+    "duplexify": "^3.5.4",
+    "length-prefixed-stream": "^1.5.1"
+  },
+  "devDependencies": {
+    "standard": "^11.0.0",
+    "tape": "^4.9.0"
+  }
+}
