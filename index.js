@@ -3,6 +3,7 @@ var lpStream = require('length-prefixed-stream')
 var Duplexify = require('duplexify')
 
 var slice = Array.prototype.slice
+var noop = function () {}
 
 var serializeError = function (err) {
   if (!(err instanceof Error)) return ['object', err]
@@ -89,11 +90,13 @@ var Client = function () {
 
 util.inherits(Client, Protocol)
 
-Client.prototype.invoke = function (name) {
-  var args = slice.call(arguments, 1)
-  var cb = args[args.length - 1]
-  if (typeof cb !== 'function') cb = null
-  else args.pop()
+Client.prototype.invoke = function (name, args, cb) {
+  if (!cb && typeof args === 'function') {
+    cb = args
+    args = null
+  }
+
+  if (!args) args = []
 
   var request = [name, args]
 
@@ -106,10 +109,10 @@ Client.prototype.invoke = function (name) {
   this._encode.write(JSON.stringify(request))
 }
 
-var Server = function (instance) {
-  if (!(this instanceof Server)) return new Server(instance)
+var Server = function (handler) {
+  if (!(this instanceof Server)) return new Server(handler)
   Protocol.call(this)
-  this._instance = instance
+  this._handler = handler
 
   var self = this
 
@@ -124,8 +127,6 @@ var Server = function (instance) {
     var name = data[0]
     var args = data[1]
     var id = data[2]
-    var hasCb = data.length === 3
-    var fn = self._instance[name]
 
     var respond = function (err) {
       var ret = slice.call(arguments)
@@ -134,14 +135,7 @@ var Server = function (instance) {
       self._encode.write(JSON.stringify(response))
     }
 
-    if (typeof fn !== 'function') return self.destroy(new Error('invalid function name'))
-
-    if (hasCb) {
-      args.push(respond)
-      fn.apply(self._instance, args)
-    } else {
-      fn.apply(self._instance, args)
-    }
+    this._handler(name, args, data.length === 3 ? respond : noop)
   })
 }
 
