@@ -85,3 +85,21 @@ test('multiple different calls', function (t) {
     t.equals(result, 'test-res-2')
   })
 })
+
+test('error on close', function (t) {
+  t.plan(2)
+
+  var client = rpc.client()
+  var server = rpc.server(function () {
+    // Hang
+  })
+
+  client.pipe(server).pipe(client)
+
+  client.invoke('test', function (err) {
+    t.ok(err instanceof Error, 'should be error')
+    t.equals(err.message, 'premature close')
+  })
+
+  server.destroy()
+})

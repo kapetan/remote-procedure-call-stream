@@ -61,6 +61,17 @@ var Client = function () {
 
   var self = this
 
+  var onclose = function () {
+    Object.keys(self._cbs).forEach(function (key) {
+      self._cbs[key](new Error('premature close'))
+      delete self._cbs[key]
+    })
+  }
+
+  this.on('close', onclose)
+  this.on('finish', onclose)
+  this.on('end', onclose)
+
   this.on('message', function (data) {
     var valid = Array.isArray(data) &&
       data.length === 2 &&
