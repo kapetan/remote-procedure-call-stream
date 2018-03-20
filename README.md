@@ -8,6 +8,8 @@ Binary RPC protocol stream.
 
 Client and server example.
 
+The `invoke` methods takes three arguments, the remote method name, an array of arguments and an optional callback which is called with the return value from the server. If the callback is omitted the server will not send a response, this can be used for fire-and-forget type events.
+
 ```javascript
 var rpc = require('remote-procedure-call-stream')
 
@@ -20,6 +22,10 @@ client.invoke('example', ['hello'], function (err, response) {
   console.log(response) // Prints 'world'
 })
 ```
+
+The server constructor accepts a handler function, it's always called with all three arguments, but the callback has no effect if the client didn't provide a callback function.
+
+If the first argument passed to the callback function is an error instance the client will receive a corresponding instance.
 
 ```javascript
 var rpc = require('remote-procedure-call-stream')
