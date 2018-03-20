@@ -123,7 +123,6 @@ Client.prototype.invoke = function (name, args, cb) {
 var Server = function (handler) {
   if (!(this instanceof Server)) return new Server(handler)
   Protocol.call(this)
-  this._handler = handler
 
   var self = this
 
@@ -146,7 +145,7 @@ var Server = function (handler) {
       self._encode.write(JSON.stringify(response))
     }
 
-    this._handler(name, args, data.length === 3 ? respond : noop)
+    handler(name, args, data.length === 3 ? respond : noop)
   })
 }
 
