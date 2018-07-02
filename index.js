@@ -76,7 +76,11 @@ var Client = function () {
     var valid = Array.isArray(data) &&
       data.length === 2 &&
       Array.isArray(data[0]) &&
-      (typeof data[1] === 'number')
+      (typeof data[1] === 'number' || data[1] == null)
+
+    // if data[1] (the callback id) is not set, then this is not
+    // a callback, but an event
+    if (data[1] == null) return this.emit('remote-event', data[0])
 
     if (!valid) return self.destroy(new Error('invalid response'))
 
@@ -150,6 +154,10 @@ var Server = function (handler) {
 }
 
 util.inherits(Server, Protocol)
+
+Server.prototype.emitRemoteEvent = function (data) {
+  this._encode.write(JSON.stringify([data]))
+}
 
 exports.client = Client
 exports.server = Server
