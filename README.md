@@ -38,3 +38,21 @@ var server = rpc.server(function (name, args, cb) {
 
 server.pipe(stream).pipe(server)
 ```
+
+### Remote events
+
+If you want the server to send data to the client without the client calling a function with a callback, you can
+use remote events. You can emit them like this from the server.
+
+```javascript
+server.emitRemoteEvent({some: 'data'})
+```
+
+and then catch them like this on the client.
+
+
+```javascript
+client.on('remote-event', function(data) {
+  console.log(data) // {some: 'data'}
+})
+```

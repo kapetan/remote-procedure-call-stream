@@ -101,3 +101,19 @@ test('error on close', function (t) {
     t.equals(err.message, 'premature close')
   })
 })
+
+test('remote event', function (t) {
+  t.plan(1)
+
+  var client = rpc.client()
+  var server = rpc.server(function (name, args, cb) {
+    cb()
+  })
+
+  client.pipe(server).pipe(client)
+
+  server.emitRemoteEvent({hello: 'captain'})
+  client.on('remote-event', function (data) {
+    t.equals(data.hello, 'captain')
+  })
+})
