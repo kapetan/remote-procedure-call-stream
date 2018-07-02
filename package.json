@@ -17,7 +17,7 @@
   "homepage": "https://github.com/kapetan/remote-procedure-call-stream#readme",
   "dependencies": {
     "duplexify": "^3.5.4",
-    "length-prefixed-stream": "^1.5.1"
+    "length-prefixed-stream": "^1.6.0"
   },
   "devDependencies": {
     "standard": "^11.0.0",
