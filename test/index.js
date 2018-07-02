@@ -91,7 +91,7 @@ test('error on close', function (t) {
 
   var client = rpc.client()
   var server = rpc.server(function () {
-    // Hang
+    client.destroy()
   })
 
   client.pipe(server).pipe(client)
@@ -100,6 +100,4 @@ test('error on close', function (t) {
     t.ok(err instanceof Error, 'should be error')
     t.equals(err.message, 'premature close')
   })
-
-  server.destroy()
 })
