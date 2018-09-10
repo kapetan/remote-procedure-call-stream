@@ -42,17 +42,17 @@ server.pipe(stream).pipe(server)
 ### Remote events
 
 If you want the server to send data to the client without the client calling a function with a callback, you can
-use remote events. You can emit them like this from the server.
+use the `notify` method.
 
 ```javascript
-server.emitRemoteEvent({some: 'data'})
+server.notify('my-event', ['hello'])
 ```
 
-and then catch them like this on the client.
+And then handle them like this on the client.
 
 
 ```javascript
-client.on('remote-event', function(data) {
-  console.log(data) // {some: 'data'}
+client.on('notify', function(name, args) {
+  console.log(name, args) // Prints 'my-event' ['hello']
 })
 ```
