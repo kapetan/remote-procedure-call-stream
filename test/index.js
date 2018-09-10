@@ -103,7 +103,7 @@ test('error on close', function (t) {
 })
 
 test('remote event', function (t) {
-  t.plan(1)
+  t.plan(2)
 
   var client = rpc.client()
   var server = rpc.server(function (name, args, cb) {
@@ -112,8 +112,9 @@ test('remote event', function (t) {
 
   client.pipe(server).pipe(client)
 
-  server.emitRemoteEvent({hello: 'captain'})
-  client.on('remote-event', function (data) {
-    t.equals(data.hello, 'captain')
+  server.notify('test', ['test-arg'])
+  client.on('notify', function (name, args) {
+    t.equals(name, 'test')
+    t.deepEquals(args, ['test-arg'])
   })
 })
